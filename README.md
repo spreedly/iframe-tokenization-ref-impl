@@ -26,17 +26,28 @@ To build the image:
 
 ```bash
 # Clone the repository
-git clone https://github.com/spreedly/iframe-tokenization-poc.git
-cd iframe-tokenization-poc
+git clone https://github.com/spreedly/iframe-tokenization-ref-impl.git
+cd iframe-tokenization-ref-impl
 
 # Build the Docker image
-docker build --no-cache -t iframe-tokenization-poc .
+docker build --no-cache -t iframe-tokenization-ref-impl .
 ```
 
 Run the container:
 
 ```shell
-docker run -e ENV_KEY=$ENV_KEY -e ACCESS_KEY=$ACCESS_KEY -e DOMAIN_NAME=$DOMAIN_NAME iframe-tokenization-poc
+docker run -e ENV_KEY=$ENV_KEY -e ACCESS_KEY=$ACCESS_KEY -e DOMAIN_NAME=$DOMAIN_NAME iframe-tokenization-ref-impl
+```
+
+Alternatively, you can start the container and run the script manually. 
+
+```shell
+docker run -it --entrypoint /bin/sh -e ENV_KEY=$ENV_KEY -e ACCESS_KEY=$ACCESS_KEY -e DOMAIN_NAME=$DOMAIN_NAME iframe-tokenization-ref-impl
+```
+
+Then execute the script:
+```shell
+./create-cert.sh
 ```
 
 ## Output
