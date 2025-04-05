@@ -4,15 +4,19 @@
 ENV_KEY=${1:-$ENV_KEY}
 ACCESS_KEY=${2:-$ACCESS_KEY}
 DOMAIN_NAME=${3:-$DOMAIN_NAME}
+SPREEDLY_ENDPOINT=${4:-$SPREEDLY_ENDPOINT}
 # Internal debug flag (not exposed to users)
-DEBUG_PRIVATE_KEY=${4:-false}
+DEBUG_PRIVATE_KEY=${5:-false}
+
+# Set default endpoint if not provided
+SPREEDLY_ENDPOINT=${SPREEDLY_ENDPOINT:-"https://core.spreedly.com"}
 
 # Check if required parameters are set
 if [ -z "$ENV_KEY" ] || [ -z "$ACCESS_KEY" ] || [ -z "$DOMAIN_NAME" ]; then
     echo "Error: Required parameters are not set"
-    echo "Usage: $0 [ENV_KEY] [ACCESS_KEY] [DOMAIN_NAME]"
-    echo "Example: $0 'your_env' 'your_access_key' 'your_domain.com'"
-    echo "Note: Parameters can also be set as environment variables: ENV_KEY, ACCESS_KEY, DOMAIN_NAME"
+    echo "Usage: $0 [ENV_KEY] [ACCESS_KEY] [DOMAIN_NAME] [SPREEDLY_ENDPOINT]"
+    echo "Example: $0 'your_env' 'your_access_key' 'your_domain.com' 'https://core.spreedly.com'"
+    echo "Note: Parameters can also be set as environment variables: ENV_KEY, ACCESS_KEY, DOMAIN_NAME, SPREEDLY_ENDPOINT"
     exit 1
 fi
 
@@ -40,7 +44,7 @@ EOF
 # Make the request but do not print anything
 # Add -s flag to curl to suppress progress and error messages
 curl -s --request POST \
-    --url https://core.spreedly.com/v1/certificates \
+    --url "${SPREEDLY_ENDPOINT}/v1/certificates" \
     --header 'accept: application/json' \
     --user "$ENV_KEY:$ACCESS_KEY" \
     --header 'content-type: application/json' \
@@ -55,9 +59,9 @@ PRIVATE_KEY_RAW=$(cat private_key.pem)
 
 # Only output PRIVATE_KEY_RAW if debug flag is set
 if [ "$DEBUG_PRIVATE_KEY" = "true" ]; then
-  echo "DEBUG ─────────────────────────────────────"
-  echo "PRIVATE_KEY_RAW: $PRIVATE_KEY_RAW"
-  echo "DEBUG ─────────────────────────────────────"
+    echo "DEBUG ─────────────────────────────────────"
+    echo "PRIVATE_KEY_RAW: $PRIVATE_KEY_RAW"
+    echo "DEBUG ─────────────────────────────────────"
 fi
 
 signature=$(echo -n "${nonce}${timestamp}${certificateToken}" | \

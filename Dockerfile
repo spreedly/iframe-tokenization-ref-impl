@@ -16,6 +16,7 @@ RUN chmod +x /app/create-cert.sh
 ENV ENV_KEY=""
 ENV ACCESS_KEY=""
 ENV DOMAIN_NAME=""
+ENV SPREEDLY_ENDPOINT="https://core.spreedly.com"
 
 # Run the script with environment variables
-ENTRYPOINT ["/bin/sh", "-c", "/app/create-cert.sh \"$ENV_KEY\" \"$ACCESS_KEY\" \"$DOMAIN_NAME\""] 
+ENTRYPOINT ["/bin/sh", "-c", "/app/create-cert.sh \"$ENV_KEY\" \"$ACCESS_KEY\" \"$DOMAIN_NAME\" \"$SPREEDLY_ENDPOINT\""] 
