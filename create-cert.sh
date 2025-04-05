@@ -43,15 +43,35 @@ EOF
 
 # Make the request but do not print anything
 # Add -s flag to curl to suppress progress and error messages
-curl -s --request POST \
+# Add -f flag to fail on HTTP errors
+# Add -w flag to get the HTTP status code
+HTTP_STATUS=$(curl -s -f -w "%{http_code}" --request POST \
     --url "${SPREEDLY_ENDPOINT}/v1/certificates" \
     --header 'accept: application/json' \
     --user "$ENV_KEY:$ACCESS_KEY" \
     --header 'content-type: application/json' \
-    --data "$JSON_DATA" | jq -r '.certificate.token' > certificate_token.txt
+    --data "$JSON_DATA" -o certificate_token.txt)
+
+CURL_EXIT_CODE=$?
+
+if [ $CURL_EXIT_CODE -ne 0 ]; then
+    echo "Error: Failed to connect to Spreedly endpoint"
+    echo "Endpoint: ${SPREEDLY_ENDPOINT}"
+    echo "HTTP Status: ${HTTP_STATUS}"
+    echo "Curl Exit Code: ${CURL_EXIT_CODE}"
+    echo "Please check your network connection and endpoint URL"
+    exit 1
+fi
+
+# Extract the certificate token from the response
+certificateToken=$(jq -r '.certificate.token' certificate_token.txt)
+if [ -z "$certificateToken" ] || [ "$certificateToken" = "null" ]; then
+    echo "Error: Failed to get certificate token from response"
+    echo "Response: $(cat certificate_token.txt)"
+    exit 1
+fi
 
 nonce=$(uuidgen)
-certificateToken=$(cat certificate_token.txt)
 timestamp=$(date +%s)
 
 # Generate a signature using the private key
