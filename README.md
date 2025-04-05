@@ -105,6 +105,14 @@ Spreedly.init("<Environment Key>", {
 - Try rebuilding with `--no-cache` to ensure a fresh build
 - Check that your Docker installation is up to date
 
+** Debugging **
+
+```shell
+DOCKER_HOST_IP=$(ifconfig en0 | grep inet | awk '$1=="inet" {print $2}')
+TEST_URL=<<for Spreedly internal Use Only>>
+docker run --add-host=$TEST_URL:$DOCKER_HOST_IP -e ENV_KEY=$ENV_KEY -e ACCESS_KEY=$ACCESS_KEY -e DOMAIN_NAME=$DOMAIN_NAME -e SPREEDLY_ENDPOINT="http://core.spreedly.test:8090"  iframe-tokenization-ref-impl
+```
+
 ## License
 
 Copyright © 2025 Spreedly. All rights reserved.
