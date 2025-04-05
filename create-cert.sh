@@ -51,7 +51,7 @@ certificateToken=$(cat certificate_token.txt)
 timestamp=$(date +%s)
 
 # Generate a signature using the private key
-PRIVATE_KEY_RAW=$(cat private_key.pem | tr -d '\n')
+PRIVATE_KEY_RAW=$(cat private_key.pem)
 
 # Only output PRIVATE_KEY_RAW if debug flag is set
 if [ "$DEBUG_PRIVATE_KEY" = "true" ]; then
