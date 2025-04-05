@@ -10,8 +10,8 @@ This tool simplifies the process of generating a Spreedly certificate for iframe
 ## Quick Start
 
 Once the image is built, run these commmands, replacing the values accordingly:
-- `your_env_key`: Your Spreedly environment key, login to obtain
-- `your_access_key`: Your Spreedly access token or key
+- `your_env_key`: Your Spreedly environment key, login to obtain. ONLY USE Non-Production values to test.
+- `your_access_key`: Your Spreedly access token or key. ONLY USE Non-Production values to test.
 - `your_domain_name`: The domain for which you're generating the certificate (e.g., payment.example.com)
 
 ```shell
@@ -20,16 +20,28 @@ ACCESS_KEY=your_access_key
 DOMAIN_NAME=your_domain_name
 ```
 
-Run the script:
+## Building Locally
+
+To build the image:
+
+```bash
+# Clone the repository
+git clone https://github.com/spreedly/iframe-tokenization-poc.git
+cd iframe-tokenization-poc
+
+# Build the Docker image
+docker build --no-cache -t iframe-tokenization-poc .
+```
+
+Run the container:
 
 ```shell
 docker run -e ENV_KEY=$ENV_KEY -e ACCESS_KEY=$ACCESS_KEY -e DOMAIN_NAME=$DOMAIN_NAME iframe-tokenization-poc
 ```
 
-
 ## Output
 
-The tool will output:
+The reference implementation tool will output:
 - A randomly generated nonce
 - Your certificate token
 - A timestamp
@@ -38,7 +50,7 @@ The tool will output:
 ## How It Works
 
 1. The tool generates a private/public key pair and certificate
-2. Registers the certificate with Spreedly using your credentials
+2. Registers the ONE-TIME use certificate with Spreedly using your credentials
 3. Creates a cryptographic signature for iframe tokenization
 4. Runs 2 reference implementations, OpenSSL and Ruby on AlpineLinux, and outputs one time usage values you can use to test your implementation:
 ```bash
@@ -65,21 +77,6 @@ Spreedly.init("<Environment Key>", {
 });
 ```
 
-## Building Locally
-
-To build the image:
-
-```bash
-# Clone the repository
-git clone https://github.com/spreedly/iframe-tokenization-poc.git
-cd iframe-tokenization-poc
-
-# Build the Docker image
-docker build --no-cache -t iframe-tokenization-poc .
-
-# Run the container
-docker run -e ENV_KEY=$ENV_KEY -e ACCESS_KEY=$ACCESS_KEY -e DOMAIN_NAME=$DOMAIN_NAME iframe-tokenization-poc
-```
 
 ## Security Notes
 
