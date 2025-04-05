@@ -51,16 +51,16 @@ certificateToken=$(cat certificate_token.txt)
 timestamp=$(date +%s)
 
 # Generate a signature using the private key
-echo "$nonce$timestamp$certificateToken" > signatureData.txt
 PRIVATE_KEY_RAW=$(jq -Rs . < private_key.pem)
+
 signature=$(echo -n "${nonce}${timestamp}${certificateToken}" | \
   openssl dgst -sha256 -hmac "$PRIVATE_KEY_RAW" -binary | \
   base64 -w 0)
-
 echo "--------------------------------"
 echo "NONCE (randomly generated): $nonce"
 echo "TIMESTAMP: $timestamp"
 echo "CERTIFICATE_TOKEN: $certificateToken"
+echo "--------------------------------"
 echo "--------------------------------"
 echo "SERVER_GENERATED_HMAC (OpenSSL): $signature" | tr -d '\n' | cat
 
@@ -73,7 +73,6 @@ hmac_signature = OpenSSL::HMAC.digest(digest, ENV['PRIVATE_KEY'], ENV['SIGNATURE
 puts "SERVER_GENERATED_HMAC (Ruby): " + Base64.strict_encode64(hmac_signature)
 EOF
 )
-
 echo
 echo "--------------------------------"
-echo $(PRIVATE_KEY=$(jq -Rs . < private_key.pem) SIGNATURE_DATA=$(cat signatureData.txt) ruby -e "$RUBY_CODE")
+echo $(PRIVATE_KEY=$PRIVATE_KEY_RAW SIGNATURE_DATA=$(echo $nonce$timestamp$certificateToken) ruby -e "$RUBY_CODE")
