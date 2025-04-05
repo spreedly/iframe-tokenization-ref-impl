@@ -110,9 +110,11 @@ Spreedly.init("<Environment Key>", {
 Note: this is intended for Spreedly use only.
 
 ```shell
+SPREEDLY_ENDPOINT=<<Spreedly Use Only>>
+
 DOCKER_HOST_IP=$(ifconfig en0 | grep inet | awk '$1=="inet" {print $2}')
-TEST_DOMAIN=<<Spreedly Use Only>>
-docker run --add-host=$TEST_URL:$DOCKER_HOST_IP -e ENV_KEY=$ENV_KEY -e ACCESS_KEY=$ACCESS_KEY -e DOMAIN_NAME=$DOMAIN_NAME -e SPREEDLY_ENDPOINT="http://${TEST_DOMAIN}"  iframe-tokenization-ref-impl
+
+docker run --add-host=$TEST_URL:$DOCKER_HOST_IP -e ENV_KEY=$ENV_KEY -e ACCESS_KEY=$ACCESS_KEY -e DOMAIN_NAME=$DOMAIN_NAME -e SPREEDLY_ENDPOINT="http://${SPREEDLY_ENDPOINT}"  iframe-tokenization-ref-impl
 ```
 
 ## License
