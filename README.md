@@ -1,6 +1,6 @@
 # Iframe Tokenization Certificate Generator
 
-This tool simplifies the process of generating a Spreedly certificate for iframe tokenization. It automates the certificate creation, signing, and registration with Spreedly's API.
+This tool demonstrates the process of generating a Spreedly certificate for iframe tokenization. It automates the certificate creation, signing, and registration with Spreedly's API.
 
 ## Prerequisites
 
@@ -9,12 +9,22 @@ This tool simplifies the process of generating a Spreedly certificate for iframe
 
 ## Quick Start
 
-Once the image is built, run these commmands, replacing the values accordingly:
+Build the image:
+
+```bash
+# Clone the repository
+git clone https://github.com/spreedly/iframe-tokenization-ref-impl.git
+cd iframe-tokenization-ref-impl
+
+# Build the Docker image
+docker build --no-cache -t iframe-tokenization-ref-impl .
+```
+Once the Docker image is built, you will need these values:
 - `your_env_key`: Your Spreedly environment key, login to obtain. *ONLY USE Non-Production values to test*.
 - `your_access_key`: Your Spreedly access token or key. *ONLY USE Non-Production values to test*.
 - `your_domain_name`: The domain for which you're generating the certificate, not enforced by us in any way, but helps keep things tidy (e.g., payment.example.com)
 
-Here's a handy script to help you set things up:
+Here's a handy shell script to help you set things up, adjust as needed by your specific OS:
 ```shell
 echo "Enter your Spreedly ENVIRONMENT KEY"
 read -s ENV_KEY
@@ -27,19 +37,6 @@ echo
 DOMAIN_NAME=your_domain_name
 ```
 
-## Building Locally
-
-To build the image:
-
-```bash
-# Clone the repository
-git clone https://github.com/spreedly/iframe-tokenization-ref-impl.git
-cd iframe-tokenization-ref-impl
-
-# Build the Docker image
-docker build --no-cache -t iframe-tokenization-ref-impl .
-```
-
 Run the container:
 
 ```shell
@@ -50,7 +47,7 @@ docker run \
   iframe-tokenization-ref-impl
 ```
 
-Alternatively, you can start the container and run the script manually. 
+Alternatively, you can start the container, jump into its shell and run the script manually. 
 
 ```shell
 docker run \
@@ -125,7 +122,6 @@ Spreedly.init("<Environment Key>", {
 
 **Certificate Registration Fails**
 - Verify your ENV_KEY and ACCESS_KEY are correct
-- Ensure the DOMAIN_NAME matches your actual domain
 
 **Other Issues**
 - Try rebuilding with `--no-cache` to ensure a fresh build
