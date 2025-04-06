@@ -2,6 +2,9 @@
 
 This tool demonstrates the process of generating a Spreedly certificate for iframe tokenization. It automates the certificate creation, signing, and registration with Spreedly's API.
 
+For a step-by-step guide, see [Step-by-Step: Using Certificates for Enhanced iFrame Security
+](https://developer.spreedly.com/docs/using-certificates-iframe-security).
+
 ## Prerequisites
 
 - Docker installed on your system ([Get Docker](https://docs.docker.com/get-docker/))
@@ -19,10 +22,13 @@ cd iframe-tokenization-ref-impl
 # Build the Docker image
 docker build --no-cache -t iframe-tokenization-ref-impl .
 ```
+
+> **Important**: ONLY USE Non-Production values to test
+
 Once the Docker image is built, you will need these values:
-- `your_env_key`: Your Spreedly environment key, login to obtain. *ONLY USE Non-Production values to test*.
-- `your_access_key`: Your Spreedly access token or key. *ONLY USE Non-Production values to test*.
-- `your_domain_name`: The domain for which you're generating the certificate, not enforced by us in any way, but helps keep things tidy (e.g., payment.example.com)
+- `your_env_key`: Your Spreedly environment key, login to obtain. 
+- `your_access_key`: Your Spreedly access token or key.
+- `your_domain_name`: The domain for which you're generating the certificate. This is not enforced by us in any way, but helps keep things tidy (e.g., `payment.example.com`)
 
 Here's a handy shell script to help you set things up, adjust as needed by your specific OS:
 ```shell
@@ -132,7 +138,7 @@ Spreedly.init("<Environment Key>", {
 Note: this is intended for *Spreedly use only*.
 
 ```shell
-SPREEDLY_ENDPOINT=<<Spreedly Use Only>>
+SPREEDLY_ENDPOINT="<<Spreedly Use Only>>"
 
 DOCKER_HOST_IP=$(ifconfig en0 | grep inet | awk '$1=="inet" {print $2}')
 
