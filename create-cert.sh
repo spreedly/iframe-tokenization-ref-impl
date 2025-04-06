@@ -20,13 +20,14 @@ if [ -z "$ENV_KEY" ] || [ -z "$ACCESS_KEY" ] || [ -z "$DOMAIN_NAME" ]; then
     exit 1
 fi
 
-# Generate a private key
+# Generate a private key, will be used to sign your requests
 openssl genrsa -out private_key.pem 3072
 
-# Generate a public key from the private key (suppressing output)
+# Generate a public key from the private key, will be used by Spreedly to verify your signature
+# output to /dev/null to suppress output
 openssl rsa -in private_key.pem -pubout -out public_key.pem > /dev/null 2>&1
 
-# Generate a self-signed certificate, expires in 1 day
+# Generate a self-signed certificate, expires in 1 day, DEMO purposes only.
 openssl req -new -x509 -days 1 -key private_key.pem -out cert.pem \
     -subj "/C=US/ST=State/L=City/O=Organization/CN=${DOMAIN_NAME}"
 
@@ -34,8 +35,7 @@ openssl req -new -x509 -days 1 -key private_key.pem -out cert.pem \
 JSON_DATA=$(cat <<EOF
 {
   "certificate": {
-    "pem": $(jq -Rs . < cert.pem),
-    "private_key": $(jq -Rs . < private_key.pem)
+    "pem": $(jq -Rs . < cert.pem)
   }
 }
 EOF

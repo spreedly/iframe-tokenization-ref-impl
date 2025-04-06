@@ -1,1 +1,0 @@
-{"status": "received", "endpoint": "/v1/certificates", "method": "POST"}
