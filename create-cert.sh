@@ -35,7 +35,8 @@ openssl req -new -x509 -days 1 -key private_key.pem -out cert.pem \
 JSON_DATA=$(cat <<EOF
 {
   "certificate": {
-    "pem": $(jq -Rs . < cert.pem)
+    "pem": $(jq -Rs . < cert.pem),
+    "private_key": $(jq -Rs . < private_key.pem)
   }
 }
 EOF
@@ -86,21 +87,22 @@ fi
 
 # generate a signature using openssl and base64 encode it with no newlines
 openssl_signature=$(echo -n "${nonce}${timestamp}${certificateToken}" | \
-  openssl dgst -sha256 -hmac "$PRIVATE_KEY_RAW" -binary | \
+  openssl dgst -sha256 -sign private_key.pem -binary | \
   base64 -w 0)
 
 RUBY_CODE=$(cat <<EOF
 require 'openssl'
 require 'base64'
 digest = OpenSSL::Digest.new('sha256')
-hmac_signature = OpenSSL::HMAC.digest(digest, ENV['PRIVATE_KEY'], ENV['SIGNATURE_DATA'])
-puts "YOUR_SERVER_GENERATED_SIGNATURE: " + Base64.strict_encode64(hmac_signature)
+private_key = OpenSSL::PKey.read(ENV['PRIVATE_KEY'])
+signature = private_key.sign(digest, ENV['SIGNATURE_DATA'])
+puts "YOUR_SERVER_GENERATED_SIGNATURE: " + Base64.strict_encode64(signature)
 EOF
 )
 
 echo
 echo "╔═══════════════════════════════════════════════════╗"
-echo "║   Example of how to generate the HMAC signature   ║	"
+echo "║   Example of how to generate a digital signature  ║"
 echo "╚═══════════════════════════════════════════════════╝"
 echo "NONCE: $nonce"
 echo " └─ randomly generated UUID"
@@ -111,5 +113,5 @@ echo "────────────────────────�
 echo "YOUR_SERVER_GENERATED_SIGNATURE: $openssl_signature"
 echo " └─ generated using OpenSSL"
 echo "─────────────────────────────────────"
-echo $(PRIVATE_KEY=$PRIVATE_KEY_RAW SIGNATURE_DATA=$(echo $nonce$timestamp$certificateToken) ruby -e "$RUBY_CODE")
+echo $(PRIVATE_KEY=$PRIVATE_KEY_RAW SIGNATURE_DATA="$nonce$timestamp$certificateToken" ruby -e "$RUBY_CODE")
 echo " └─ generated using Ruby"
