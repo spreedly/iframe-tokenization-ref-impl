@@ -1,0 +1,14 @@
+{
+  "name": "signature-generator",
+  "version": "1.0.0",
+  "description": "Signature generator for Spreedly",
+  "main": "dist/generate_signature.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/generate_signature.js"
+  },
+  "dependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  }
+} 
