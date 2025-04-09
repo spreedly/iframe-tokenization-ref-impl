@@ -171,14 +171,11 @@ Spreedly.init("<Environment Key>", {
 - If you're experiencing unexpected behavior, verify that the container version matches the VERSION file:
 
 ```shell
-  # Check the version in your VERSION file
+  # Check the version in VERSION file
   cat VERSION
-  
-  # Check the version of your running container
-  docker run --rm iframe-tokenization-ref-impl:latest env | grep VERSION
 ```
 
-If versions don't match, rebuild the container as per the instructions above.
+When the program executes, the version number is printed out at the start, if versions don't match, rebuild the container as per the instructions above.
 
 **Other Issues**
 - Try rebuilding with `--no-cache` to ensure a fresh build.
